@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <title>Mad Lib</title>
     </head>
     <body>
-        <h1>Welcome to Johnny's site</h1>
-        <h1>Check out some of my personal projects</h1>
-        <a href="https://bbscheduler.com">Blind Brook Scheduler</a>
-        <a href="https://jrprogramming.github.io/Blind-Brook-Planner">Blind Brook Planner</a>
-        <a href="https://hchemistryfinal.herokuapp.com">Honors Chemistry Finals</a>
+        <h1>{{partOfSpeech}}</h1>
+        <form action="/">
+            {{form|safe}}
+            {{error|safe}}
+        </form>
+        <h1>{{title}}</h1>
+        <p>{{story}}</p>
+        <form action="/">
+            <input type="submit" value="Restart Game"/>
+        </form>
     </body>
 </html>
