@@ -3,10 +3,7 @@ import requests
 app = Flask(__name__)
 
 responses = []
-questions = ["Name", "Past Verb", "Past Verb"]
-story = ["Once upon a time, ", " went for a walk. He ", " so hard that it he almost ", ". It was pretty funny to watch."]
-madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random")
-# Print the status code of the response.
+madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random?minLength=2")
 questions = madlibAPI.json()["blanks"]
 story = madlibAPI.json()["value"]
 title = madlibAPI.json()["title"]
@@ -16,8 +13,6 @@ error = "<br><strong style='color: red;'>Please type something into the textfiel
 @app.route("/")
 def madlib():
     global questions, responses, story, title, form
-    if title == "Hello ____!":
-        newGame()
     if request.args.get("response") and len(str(request.args.get("response")).strip()) != 0:
         responses.append(request.args.get("response"))
         if len(responses) == len(questions):
@@ -41,7 +36,7 @@ def madlib():
 def newGame():
     global responses, madlibAPI, questions, story, title
     responses = []
-    madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random")
+    madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random?minLength=2")
     questions = madlibAPI.json()["blanks"]
     story = madlibAPI.json()["value"]
     title = madlibAPI.json()["title"]
