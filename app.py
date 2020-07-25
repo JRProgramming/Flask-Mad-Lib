@@ -1,19 +1,24 @@
 from flask import Flask, render_template, request
-import requests
+from random import randint
+import json
 app = Flask(__name__)
 
 responses = []
-madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random")
-questions = madlibAPI.json()["blanks"]
-story = madlibAPI.json()["value"]
-title = madlibAPI.json()["title"]
+with open("madlib.json") as f:
+    madlibAPI =  json.load(f)
+madlibAPI = madlibAPI["templates"]
+randomNum = randint(0, len(madlibAPI))
+madlib = madlibAPI[randomNum]
+questions = madlib["blanks"]
+story = madlib["value"]
+title = madlib["title"]
 form = "<input type='text' name='response'><input type='submit'><br>"
 error = "<br><strong style='color: red;'>Please type something into the textfield</strong>"
 
 @app.route("/", methods=["GET","POST"])
 def madlib():
-    global questions, responses, story, title, form
-    if request.form.get("restart"):
+    global questions, responses, story, title, form, error
+    if request.form.get("restart") or (request.method == "GET" and len(responses) == 0):
         newGame()
         return render_template("index.html", form=form, partOfSpeech=questions[0])
     if request.method == "POST" and len(str(request.form.get("response")).strip()) != 0:
@@ -35,7 +40,11 @@ def madlib():
 def newGame():
     global responses, madlibAPI, questions, story, title
     responses = []
-    madlibAPI = requests.get("http://madlibz.herokuapp.com/api/random")
-    questions = madlibAPI.json()["blanks"]
-    story = madlibAPI.json()["value"]
-    title = madlibAPI.json()["title"]
+    with open("madlib.json") as f:
+        madlibAPI =  json.load(f)
+    madlibAPI = madlibAPI["templates"]
+    randomNum = randint(0, len(madlibAPI))
+    madlib = madlibAPI[randomNum]
+    questions = madlib["blanks"]
+    story = madlib["value"]
+    title = madlib["title"]
